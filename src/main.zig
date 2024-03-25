@@ -4,7 +4,7 @@ const inner = @cImport({
     @cInclude("raymath.h");
     @cInclude("rlgl.h");
 });
-const utils = @import("utils.zig");
+pub const utils = @import("utils.zig");
 pub fn main() !void {}
 pub const Camera2D = inner.Camera2D;
 pub const Image = inner.Image;
