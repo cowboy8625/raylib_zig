@@ -13,6 +13,7 @@ pub const FLAG_WINDOW_RESIZABLE = inner.FLAG_WINDOW_RESIZABLE;
 pub const LOG_NONE = inner.LOG_NONE;
 pub const SetConfigFlags = inner.SetConfigFlags;
 pub const SetTraceLogLevel = inner.SetTraceLogLevel;
+pub const GetFontDefault = inner.GetFontDefault;
 
 pub const Color = struct {
     const Self = @This();
@@ -474,6 +475,10 @@ pub fn GetKeyPressed() ?KeyboardKey {
     return @enumFromInt(key);
 }
 
+pub fn GetCharPressed() i32 {
+    return inner.GetCharPressed();
+}
+
 pub fn ClearBackground(color: Color) void {
     inner.ClearBackground(color.asRaylibColor());
 }
@@ -553,6 +558,25 @@ pub fn DrawTextureRect(
 pub fn DrawText(text: []const u8, x: i32, y: i32, fontSize: i32, color: Color) void {
     const ctext: [*c]u8 = @constCast(text.ptr);
     inner.DrawText(ctext, @intCast(x), @intCast(y), @intCast(fontSize), color.asRaylibColor());
+}
+
+pub fn DrawTextEx(
+    font: inner.Font,
+    text: []const u8,
+    pos: Vector2(f32),
+    fontSize: f32,
+    spacing: f32,
+    color: Color,
+) void {
+    const ctext: [*c]u8 = @constCast(text.ptr);
+    inner.DrawTextEx(
+        font,
+        ctext,
+        pos.asRaylibVector2(),
+        fontSize,
+        spacing,
+        color.asRaylibColor(),
+    );
 }
 
 pub fn DrawLine(x1: i32, y1: i32, x2: i32, y2: i32, color: Color) void {
