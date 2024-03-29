@@ -1,5 +1,5 @@
 const std = @import("std");
-const rl = @import("main.zig");
+const rl = @import("root.zig");
 const Vector2 = rl.Vector2;
 
 pub fn genEnumFromStringArray(comptime args: []const []const u8) type {
