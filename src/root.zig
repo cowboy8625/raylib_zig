@@ -231,6 +231,10 @@ pub fn Vector2(comptime T: type) type {
             return .{ .x = x, .y = y };
         }
 
+        pub fn isZero(self: Self) bool {
+            return self.x == 0 and self.y == 0;
+        }
+
         pub fn add(self: Self, other: Self) Self {
             return .{ .x = self.x + other.x, .y = self.y + other.y };
         }
@@ -700,4 +704,12 @@ pub fn GetImageColorV(image: Image, position: Vector2(i32)) Color {
 
 pub fn CheckCollisionCircleRec(center: Vector2(f32), radius: f32, rec: Rectangle(f32)) bool {
     return inner.CheckCollisionCircleRec(center.asRaylibVector2(), radius, rec.asRaylibRectangle());
+}
+
+pub fn GetFrameTime() f32 {
+    return inner.GetFrameTime();
+}
+
+pub fn GetTime() f64 {
+    return inner.GetTime();
 }
