@@ -609,6 +609,16 @@ pub fn DrawRectangleLines(x: i32, y: i32, width: i32, height: i32, color: Color)
     );
 }
 
+pub fn DrawRectangleLinesV(pos: Vector2(i32), size: Vector2(i32), color: Color) void {
+    inner.DrawRectangleLines(
+        pos.x,
+        pos.y,
+        size.x,
+        size.y,
+        color.asRaylibColor(),
+    );
+}
+
 pub fn DrawRectangleLinesEx(rec: Rectangle(f32), thickness: f32, color: Color) void {
     inner.DrawRectangleLinesEx(rec.asRaylibRectangle(), thickness, color.asRaylibColor());
 }
