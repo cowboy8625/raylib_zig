@@ -235,24 +235,52 @@ pub fn Vector2(comptime T: type) type {
             return self.x == 0 and self.y == 0;
         }
 
-        pub fn add(self: Self, other: Self) Self {
-            return .{ .x = self.x + other.x, .y = self.y + other.y };
+        pub fn add(self: Self, other: anytype) Self {
+            switch (@TypeOf(other)) {
+                Self => {
+                    return .{ .x = self.x + other.x, .y = self.y + other.y };
+                },
+                T, comptime_int => {
+                    return .{ .x = self.x + other, .y = self.y + other };
+                },
+                else => @compileError("Unsupported type " ++ @typeName(@TypeOf(other))),
+            }
         }
 
         pub fn sub(self: Self, other: Self) Self {
-            return .{ .x = self.x - other.x, .y = self.y - other.y };
+            switch (@TypeOf(other)) {
+                Self => {
+                    return .{ .x = self.x - other.x, .y = self.y - other.y };
+                },
+                T, comptime_int => {
+                    return .{ .x = self.x + other, .y = self.y + other };
+                },
+                else => @compileError("Unsupported type " ++ @typeName(@TypeOf(other))),
+            }
         }
 
         pub fn mul(self: Self, other: Self) Self {
-            return .{ .x = self.x * other.x, .y = self.y * other.y };
+            switch (@TypeOf(other)) {
+                Self => {
+                    return .{ .x = self.x * other.x, .y = self.y * other.y };
+                },
+                T, comptime_int => {
+                    return .{ .x = self.x + other, .y = self.y + other };
+                },
+                else => @compileError("Unsupported type " ++ @typeName(@TypeOf(other))),
+            }
         }
 
         pub fn div(self: Self, other: Self) Self {
-            return .{ .x = @divFloor(self.x, other.x), .y = @divFloor(self.y, other.y) };
-        }
-
-        pub fn divFromNum(self: Self, comptime other: comptime_int) Self {
-            return .{ .x = @divFloor(self.x, other), .y = @divFloor(self.y, other) };
+            switch (@TypeOf(other)) {
+                Self => {
+                    return .{ .x = @divFloor(self.x, other.x), .y = @divFloor(self.y, other.y) };
+                },
+                T, comptime_int => {
+                    return .{ .x = self.x + other, .y = self.y + other };
+                },
+                else => @compileError("Unsupported type " ++ @typeName(@TypeOf(other))),
+            }
         }
 
         pub fn max(self: Self, other: Self) Self {
@@ -471,6 +499,10 @@ pub fn IsKeyReleased(key: KeyboardKey) bool {
     return inner.IsKeyReleased(@intCast(@intFromEnum(key)));
 }
 
+pub fn IsKeyPressedRepeat(key: KeyboardKey) bool {
+    return inner.IsKeyPressedRepeat(@intCast(@intFromEnum(key)));
+}
+
 pub fn GetKeyPressed() ?KeyboardKey {
     const key = inner.GetKeyPressed();
     if (key == 0) {
@@ -609,12 +641,12 @@ pub fn DrawRectangleLines(x: i32, y: i32, width: i32, height: i32, color: Color)
     );
 }
 
-pub fn DrawRectangleLinesV(pos: Vector2(i32), size: Vector2(i32), color: Color) void {
+pub fn DrawRectangleLinesV(pos: Vector2(i32), dimension: Vector2(i32), color: Color) void {
     inner.DrawRectangleLines(
         pos.x,
         pos.y,
-        size.x,
-        size.y,
+        dimension.x,
+        dimension.y,
         color.asRaylibColor(),
     );
 }
