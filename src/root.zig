@@ -466,6 +466,8 @@ pub const KeyboardKey = enum(u32) {
     MENU = 5, // Key: Android menu button
     VOLUME_UP = 24, // Key: Android volume up button
     VOLUME_DOWN = 25, // Key: Android volume down button
+    // This are additional Keys I've added
+    COLON = 58,
 };
 
 // Mouse buttons
@@ -503,10 +505,13 @@ pub fn IsKeyPressedRepeat(key: KeyboardKey) bool {
     return inner.IsKeyPressedRepeat(@intCast(@intFromEnum(key)));
 }
 
-pub fn GetKeyPressed() ?KeyboardKey {
+pub fn GetKeyPressed() KeyboardKey {
+    if (IsKeyDown(KeyboardKey.LEFT_SHIFT) and IsKeyPressed(KeyboardKey.SEMICOLON)) {
+        return .COLON;
+    }
     const key = inner.GetKeyPressed();
     if (key == 0) {
-        return null;
+        return .NULL;
     }
     return @enumFromInt(key);
 }
